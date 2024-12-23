@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Smart Waste Management Dashboard</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet/dist/leaflet.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/leaflet/dist/leaflet.js"></script>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      background-color: #f0f8ff;
+    }
+
+    header {
+      background-color: #4CAF50;
+      color: white;
+      text-align: center;
+      padding: 1rem 0;
+    }
+
+    nav {
+      margin-top: 10px;
+    }
+
+    nav a {
+      color: white;
+      padding: 10px 15px;
+      text-decoration: none;
+      margin: 0 5px;
+      border-radius: 5px;
+      transition: background-color 0.3s;
+    }
+
+    nav a:hover {
+      background-color: #45a049;
+    }
+
+    section {
+      padding: 2rem;
+      margin: 1rem;
+      background-color: white;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    section h2 {
+      margin-top: 0;
+      color: #333;
+    }
+
+    #map {
+      height: 400px;
+      border-radius: 8px;
+    }
+
+    canvas {
+      max-height: 300px;
+    }
+
+    ul {
+      list-style: none;
+      padding: 0;
+    }
+
+    ul li {
+      margin: 0.5rem 0;
+      padding: 0.5rem;
+      background-color: #fff;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+    }
+
+    textarea {
+      width: 100%;
+      height: 80px;
+      margin-bottom: 1rem;
+      border-radius: 4px;
+      border: 1px solid #ddd;
+      padding: 0.5rem;
+    }
+
+    button {
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      padding: 0.5rem 1rem;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #45a049;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Welcome to the Smart Waste Management System</h1>
+    <nav>
+      <a href="services.html">Our Services</a>
+      <a href="treatment.html">Treatment Process</a>
+      <a href="dashboard.html">Dashboard</a>
+      <a href="feedback.html">Feedback</a>
+      <a href="blog.html">Blog</a>
+      <a href="resources.html">Resources</a> <!-- Link to the resources page -->
+    </nav>
+  </header>
+
+  <!-- Waste Level Data -->
+  <section>
+    <h2>Current Waste Level Overview</h2>
+    <canvas id="wasteGraph"></canvas>
+  </section>
+
+  <!-- Live Map -->
+  <section>
+    <h2>Live Map</h2>
+    <div id="map"></div>
+  </section>
+
+  <!-- Management Dashboard -->
+  <section>
+    <h2>Management Dashboard</h2>
+    <h3>Urgent Alerts</h3>
+    <ul id="alert-list"></ul>
+    <h3>Truck Dispatch Panel</h3>
+    <ul id="dispatch-list"></ul>
+  </section>
+
+  <!-- Waste Collection Schedule -->
+  <section>
+    <h2>Waste Collection Schedule</h2>
+    <ul>
+      <li>Monday - Ganganagar: Sector 9 (8:00 AM)</li>
+      <li>Tuesday - Meerut: Shastri Nagar (10:00 AM)</li>
+      <li>Wednesday - Ganganagar: Sector 14 (9:00 AM)</li>
+      <li>Thursday - Meerut: Gandhi Nagar (11:00 AM)</li>
+    </ul>
+  </section>
+
+  <!-- Report an Issue -->
+  <section>
+    <h2>Report an Issue</h2>
+    <p>Describe the issue (e.g., overflowing bin):</p>
+    <textarea id="issueDescription" placeholder="Write your issue here..."></textarea>
+    <button onclick="submitIssue()">Report Issue</button>
+  </section>
+
+  <script>
+    const binLocations = [
+      { name: "Ganganagar - Sector 9", lat: 28.6538, lng: 77.2285, level: 75 },
+      { name: "Meerut - Shastri Nagar", lat: 28.9845, lng: 77.7064, level: 60 },
+      { name: "Ganganagar - Sector 14", lat: 28.6738, lng: 77.2485, level: 85 },
+      { name: "Meerut - Gandhi Nagar", lat: 28.9945, lng: 77.7164, level: 40 }
+    ];
+
+    // Map Initialization
+    const map = L.map('map').setView([28.6538, 77.2285], 10);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '&copy; OpenStreetMap contributors'
+    }).addTo(map);
+
+    // Bin Markers
+    const markers = [];
+    binLocations.forEach((bin, index) => {
+      const color = bin.level > 80 ? 'red' : bin.level > 50 ? 'yellow' : 'green';
+      const marker = L.circleMarker([bin.lat, bin.lng], {
+        color: color,
+        radius: 10
+      }).addTo(map)
+        .bindPopup(`${bin.name} - ${bin.level}% Full`);
+      markers.push(marker);
+    });
+
+    // Waste Data for Graph
+    const wasteData = {
+      labels: binLocations.map(bin => bin.name),
+      datasets: [{
+        label: 'Waste Level (%)',
+        data: binLocations.map(bin => bin.level),
+        backgroundColor: ['rgba(75, 192, 192, 0.2)', 'rgba(255, 99, 132, 0.2)', 'rgba(54, 162, 235, 0.2)', 'rgba(255, 159, 64, 0.2)'],
+        borderColor: ['rgba(75, 192, 192, 1)', 'rgba(255, 99, 132, 1)', 'rgba(54, 162, 235, 1)', 'rgba(255, 159, 64, 1)'],
+        borderWidth: 1
+      }]
+    };
+
+    // Initialize Waste Graph
+    const ctx = document.getElementById('wasteGraph').getContext('2d');
+    const wasteGraph = new Chart(ctx, {
+      type: 'bar',
+      data: wasteData,
+      options: {
+        responsive: true,
+        scales: {
+          y: {
+            beginAtZero: true,
+            max: 100
+          }
+        }
+      }
+    });
+
+    // Update Waste Levels and Map
+    function generateRandomLevels() {
+      return Math.floor(Math.random() * 100) + 1;
+    }
+
+    function updateWasteLevels() {
+      binLocations.forEach((bin, index) => {
+        bin.level = generateRandomLevels();
+        const color = bin.level > 80 ? 'red' : bin.level > 50 ? 'yellow' : 'green';
+        markers[index].setStyle({ color: color });
+        markers[index].bindPopup(`${bin.name} - ${bin.level}% Full`);
+      });
+
+      wasteData.datasets[0].data = binLocations.map(bin => bin.level);
+      wasteGraph.update();
+      updateAlerts();
+    }
+
+    function updateAlerts() {
+      const alertList = document.getElementById('alert-list');
+      const dispatchList = document.getElementById('dispatch-list');
+      alertList.innerHTML = '';
+      dispatchList.innerHTML = '';
+
+      binLocations.forEach((bin, index) => {
+        if (bin.level > 80) {
+          const alertItem = document.createElement('li');
+          alertItem.textContent = `${bin.name} is ${bin.level}% full!`;
+          alertList.appendChild(alertItem);
+
+          const dispatchItem = document.createElement('li');
+          dispatchItem.innerHTML = `
+            ${bin.name} - ${bin.level}% Full 
+            <button onclick="dispatchTruck(${index})">Dispatch Truck</button>
+          `;
+          dispatchList.appendChild(dispatchItem);
+        }
+      });
+    }
+
+    function dispatchTruck(index) {
+      alert(`${binLocations[index].name} - Truck dispatched!`);
+      binLocations[index].level = 0;
+      updateWasteLevels();
+    }
+
+    function submitIssue() {
+      const description = document.getElementById('issueDescription').value;
+      alert(`Issue reported: ${description}`);
+      document.getElementById('issueDescription').value = ''; // Clear textarea
+    }
+
+    // Periodically update the waste levels and alerts every 5 seconds
+    setInterval(updateWasteLevels, 5000);
+  </script>
+</body>
+</html>

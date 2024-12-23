@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Treatment - Smart Waste Management</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/chart.js">
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f9f9f9;
+      color: #333;
+      overflow-x: hidden; /* Prevent horizontal scroll */
+    }
+
+    header {
+      background-color: #4CAF50;
+      color: white;
+      text-align: center;
+      padding: 1rem 0;
+      position: relative;
+      overflow: hidden;
+    }
+
+    nav {
+      background-color: #45a049;
+      display: flex;
+      justify-content: center;
+      padding: 0.5rem 0;
+    }
+
+    nav a {
+      color: white;
+      padding: 0.5rem 1rem;
+      text-decoration: none;
+      font-size: 1rem;
+      transition: background-color 0.3s;
+    }
+
+    nav a:hover {
+      background-color: #3e8e41;
+    }
+
+    section {
+      margin: 1rem auto;
+      padding: 2rem;
+      background-color: white;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      width: 90%;
+      max-width: 800px;
+      opacity: 0; /* Start invisible */
+      transform: translateY(20px); /* Start slightly down */
+      animation: fadeInUp 0.5s forwards; /* Fade in animation */
+    }
+
+    section h2 {
+      margin-top: 0;
+      color: #4CAF50;
+      text-align: center;
+    }
+
+    section p {
+      margin: 0.5rem 0;
+      line-height: 1.6;
+    }
+
+    .guidelines {
+      background-color: #e8f5e9;
+      padding: 1rem;
+      border-radius: 4px;
+      margin-bottom: 1rem;
+    }
+
+    .chart-container {
+      position: relative;
+      height: 300px;
+      margin: 2rem auto;
+    }
+
+    /* Animation Keyframes */
+    @keyframes fadeInUp {
+      to {
+        opacity: 1; /* Fully visible */
+        transform: translateY(0); /* Move to original position */
+      }
+    }
+
+    /* Moving circles */
+    .moving-circle {
+      position: absolute;
+      border-radius: 50%;
+      background-color: rgba(76, 175, 80, 0.7);
+      width: 50px;
+      height: 50px;
+      animation: moveCircle 10s infinite alternate;
+      z-index: -1; /* Send to background */
+    }
+
+    @keyframes moveCircle {
+      0% {
+        left: 0%;
+        top: 10%;
+      }
+      25% {
+        left: 100%;
+        top: 20%;
+      }
+      50% {
+        left: 0%;
+        top: 30%;
+      }
+      75% {
+        left: 100%;
+        top: 40%;
+      }
+      100% {
+        left: 0%;
+        top: 50%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Treatment Processes</h1>
+    <nav>
+      <a href="index.html">Home</a>
+      <a href="services.html">Services</a>
+      <a href="dashboard.html">Dashboard</a>
+      <a href="feedback.html">Feedback</a>
+      <a href="blog.html">Blog</a>
+    </nav>
+    <!-- Moving Circle -->
+    <div class="moving-circle"></div>
+  </header>
+
+  <section>
+    <h2>Biological Treatment</h2>
+    <p>Biological treatment involves composting and anaerobic digestion, turning organic waste into valuable compost or biogas.</p>
+    <div class="guidelines">
+      <p><strong>Guidelines:</strong></p>
+      <ul>
+        <li>Ensure organic waste is free from contaminants.</li>
+        <li>Maintain optimal moisture levels for effective composting.</li>
+        <li>Monitor anaerobic digesters for consistent biogas production.</li>
+      </ul>
+    </div>
+    <div class="chart-container">
+      <canvas id="biologicalChart"></canvas>
+    </div>
+  </section>
+
+  <section>
+    <h2>Mechanical Treatment</h2>
+    <p>Mechanical processes include shredding, compacting, and separating materials to prepare waste for further treatment or recycling.</p>
+    <div class="guidelines">
+      <p><strong>Guidelines:</strong></p>
+      <ul>
+        <li>Inspect equipment regularly to prevent breakdowns.</li>
+        <li>Use advanced sorting technologies for improved efficiency.</li>
+        <li>Separate hazardous waste before processing.</li>
+      </ul>
+    </div>
+    <div class="chart-container">
+      <canvas id="mechanicalChart"></canvas>
+    </div>
+  </section>
+
+  <section>
+    <h2>Chemical Treatment</h2>
+    <p>Chemical methods involve neutralizing or stabilizing hazardous waste using chemical agents, ensuring safe disposal.</p>
+    <div class="guidelines">
+      <p><strong>Guidelines:</strong></p>
+      <ul>
+        <li>Conduct safety checks before handling chemicals.</li>
+        <li>Use appropriate protective equipment during treatment.</li>
+        <li>Store treated waste in compliant facilities.</li>
+      </ul>
+    </div>
+    <div class="chart-container">
+      <canvas id="chemicalChart"></canvas>
+    </div>
+  </section>
+
+  <section>
+    <h2>Thermal Treatment</h2>
+    <p>Thermal treatments, like incineration and pyrolysis, convert waste into energy or reduce it to inert ash.</p>
+    <div class="guidelines">
+      <p><strong>Guidelines:</strong></p>
+      <ul>
+        <li>Maintain incinerator temperatures to ensure complete combustion.</li>
+        <li>Filter emissions to reduce environmental impact.</li>
+        <li>Monitor ash residue for potential reuse in construction materials.</li>
+      </ul>
+    </div>
+    <div class="chart-container">
+      <canvas id="thermalChart"></canvas>
+    </div>
+  </section>
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script>
+    function createChart(ctx, label, data, colors) {
+      return new Chart(ctx, {
+        type: 'doughnut',
+        data: {
+          labels: label,
+          datasets: [{
+            data: data,
+            backgroundColor: colors,
+            hoverOffset: 4
+          }]
+        },
+        options: {
+          responsive: true,
+          plugins: {
+            legend: {
+              position: 'bottom'
+            }
+          }
+        }
+      });
+    }
+
+    // Biological Treatment Chart
+    createChart(
+      document.getElementById('biologicalChart').getContext('2d'),
+      ['Composted', 'Biogas Produced', 'Residuals'],
+      [60, 30, 10],
+      ['#4CAF50', '#FFC107', '#FF5722']
+    );
+
+    // Mechanical Treatment Chart
+    createChart(
+      document.getElementById('mechanicalChart').getContext('2d'),
+      ['Recycled', 'Prepared for Disposal'],
+      [70, 30],
+      ['#4CAF50', '#FFC107']
+    );
+
+    // Chemical Treatment Chart
+    createChart(
+      document.getElementById('chemicalChart').getContext('2d'),
+      ['Neutralized', 'Stabilized', 'Residuals'],
+      [50, 40, 10],
+      ['#4CAF50', '#FFC107', '#FF5722']
+    );
+
+    // Thermal Treatment Chart
+    createChart(
+      document.getElementById('thermalChart').getContext('2d'),
+      ['Energy Recovered', 'Ash Generated'],
+      [80, 20],
+      ['#4CAF50', '#FF5722']
+    );
+
+    // Trigger section animations after the page loads
+    window.onload = function() {
+      const sections = document.querySelectorAll('section');
+      sections.forEach((section, index) => {
+        setTimeout(() => {
+          section.style.opacity = 1;
+          section.style.transform = 'translateY(0)';
+        }, index * 200); // Stagger the animation
+      });
+    };
+  </script>
+</body>
+</html>

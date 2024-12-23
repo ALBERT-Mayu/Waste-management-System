@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Feedback - Smart Waste Management Dashboard</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            background-color: #f0f8ff; /* Matches the Home page background */
+        }
+
+        header {
+            background-color: #4CAF50; /* Matches the Home page header color */
+            color: white;
+            text-align: center;
+            padding: 1.5rem 0;
+        }
+
+        nav {
+            margin-top: 10px;
+        }
+
+        nav a {
+            color: white;
+            padding: 10px 15px;
+            text-decoration: none;
+            margin: 0 5px;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+
+        nav a:hover {
+            background-color: #45a049; /* Matches the Home page hover color */
+        }
+
+        section {
+            padding: 2rem;
+            margin: 1rem auto;
+            background-color: white;
+            border: 1px solid #ddd; /* Matches the Home page border style */
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            max-width: 600px; /* Centering the form */
+        }
+
+        section h2 {
+            margin-top: 0;
+            color: #333; /* Matches the Home page heading color */
+            font-size: 1.8rem; /* Larger font size */
+            text-align: center; /* Centering heading */
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        label {
+            font-weight: bold; /* Bold text for labels */
+        }
+
+        input[type="text"],
+        input[type="email"],
+        textarea {
+            padding: 10px;
+            border: 1px solid #ddd; /* Matches the Home page input border */
+            border-radius: 5px;
+            transition: border-color 0.3s;
+        }
+
+        input[type="text"]:focus,
+        input[type="email"]:focus,
+        textarea:focus {
+            border-color: #4CAF50; /* Matches the Home page focus color */
+            outline: none;
+        }
+
+        .feedback-type {
+            margin-bottom: 10px;
+        }
+
+        button[type="submit"],
+        .back-button {
+            background-color: #4CAF50; /* Matches the Home page button color */
+            color: white;
+            border: none;
+            padding: 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background-color 0.3s;
+        }
+
+        button[type="submit"]:hover,
+        .back-button:hover {
+            background-color: #45a049; /* Matches the Home page button hover color */
+        }
+
+        /* Popup styles */
+        .popup {
+            display: none;
+            position: fixed;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            background-color: white;
+            border: 1px solid #ddd;
+            padding: 20px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            z-index: 1000;
+            width: 300px;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .popup.active {
+            display: block;
+        }
+
+        .overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 999;
+        }
+
+        .close-btn {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Feedback</h1>
+        <nav>
+            <a href="index.html">Home</a>
+            <a href="services.html">Our Services</a>
+            <a href="treatment.html">Treatment Process</a>
+            <a href="dashboard.html">Dashboard</a>
+            <a href="blog.html">Blog</a>
+        </nav>
+    </header>
+
+    <section>
+        <h2>Your Feedback Matters!</h2>
+        <form id="feedbackForm">
+            <label for="name">Name:</label>
+            <input type="text" id="name" required placeholder="Your Name">
+            
+            <label for="email">Email:</label>
+            <input type="email" id="email" required placeholder="Your Email">
+            
+            <label>Feedback Type:</label>
+            <label><input type="checkbox" class="feedback-type" value="Suggestion"> Suggestion</label>
+            <label><input type="checkbox" class="feedback-type" value="Issue"> Issue</label>
+            <label><input type="checkbox" class="feedback-type" value="Other"> Other</label>
+
+            <label for="message">Message:</label>
+            <textarea id="message" rows="4" required placeholder="Your Feedback..."></textarea>
+
+            <button type="submit">Submit Feedback</button>
+        </form>
+
+        <button class="back-button" onclick="window.history.back()">Back to Previous Page</button>
+    </section>
+
+    <!-- Popup -->
+    <div class="overlay" id="overlay"></div>
+    <div class="popup" id="popup">
+        <h3>Feedback Submitted!</h3>
+        <p>Your feedback has been received. Thank you!</p>
+        <button class="close-btn" onclick="closePopup()">Close</button>
+    </div>
+
+    <script>
+        document.getElementById('feedbackForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+
+            const name = document.getElementById('name').value;
+            const email = document.getElementById('email').value;
+            const message = document.getElementById('message').value;
+            const feedbackTypes = Array.from(document.querySelectorAll('.feedback-type:checked')).map(cb => cb.value);
+
+            console.log('Feedback submitted:', { name, email, feedbackTypes, message });
+
+            document.getElementById('popup').classList.add('active');
+            document.getElementById('overlay').style.display = 'block';
+
+            document.getElementById('feedbackForm').reset();
+        });
+
+        function closePopup() {
+            document.getElementById('popup').classList.remove('active');
+            document.getElementById('overlay').style.display = 'none';
+        }
+    </script>
+</body>
+</html>

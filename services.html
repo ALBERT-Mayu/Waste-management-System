@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Services - Smart Waste Management</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/chart.js">
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f9f9f9;
+      color: #333;
+    }
+
+    header {
+      background-color: #4CAF50;
+      color: white;
+      text-align: center;
+      padding: 1rem 0;
+    }
+
+    nav {
+      background-color: #45a049;
+      display: flex;
+      justify-content: center;
+      padding: 0.5rem 0;
+    }
+
+    nav a {
+      color: white;
+      padding: 0.5rem 1rem;
+      text-decoration: none;
+      font-size: 1rem;
+      transition: background-color 0.3s;
+    }
+
+    nav a:hover {
+      background-color: #3e8e41;
+    }
+
+    section {
+      margin: 1rem auto;
+      padding: 2rem;
+      background-color: white;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      width: 90%;
+      max-width: 800px;
+    }
+
+    section h2 {
+      margin-top: 0;
+      color: #4CAF50;
+      text-align: center;
+    }
+
+    section p {
+      margin: 0.5rem 0;
+      line-height: 1.6;
+    }
+
+    .guidelines {
+      background-color: #e8f5e9;
+      padding: 1rem;
+      border-radius: 4px;
+      margin-bottom: 1rem;
+    }
+
+    .chart-container {
+      position: relative;
+      height: 300px;
+      margin: 2rem auto;
+    }
+
+    .map-container {
+      position: relative;
+      height: 400px;
+      margin: 2rem auto;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      overflow: hidden;
+    }
+
+    iframe {
+      width: 100%;
+      height: 100%;
+      border: none;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Our Services</h1>
+    <nav>
+      <a href="index.html">Home</a>
+      <a href="treatment.html">Treatment</a>
+      <a href="dashboard.html">Dashboard</a>
+      <a href="feedback.html">Feedback</a>
+      <a href="blog.html">Blog</a>
+    </nav>
+  </header>
+
+  <section>
+    <h2>Waste Collection Methods</h2>
+    <p>Efficient waste collection is critical for maintaining hygiene and sustainability. Our system utilizes GPS-enabled trucks and AI-driven scheduling to optimize routes and reduce fuel consumption.</p>
+    <div class="guidelines">
+      <p><strong>Guidelines:</strong></p>
+      <ul>
+        <li>Ensure bins are accessible for collection.</li>
+        <li>Separate waste into biodegradable and non-biodegradable categories.</li>
+        <li>Report full bins using our app to prioritize collection.</li>
+      </ul>
+    </div>
+    <div class="chart-container">
+      <canvas id="collectionChart"></canvas>
+    </div>
+  </section>
+
+  <section>
+    <h2>Dumping Processes</h2>
+    <p>Dumping is conducted responsibly to minimize environmental impact. Sites are monitored for compliance with ecological regulations and equipped with leachate treatment systems.</p>
+    <div class="guidelines">
+      <p><strong>Guidelines:</strong></p>
+      <ul>
+        <li>Avoid illegal dumping of hazardous materials.</li>
+        <li>Utilize designated dumping zones for specific waste types.</li>
+      </ul>
+    </div>
+    <div class="chart-container">
+      <canvas id="dumpingChart"></canvas>
+    </div>
+  </section>
+
+  <section>
+    <h2>Segregation Techniques</h2>
+    <p>Segregation involves sorting waste into categories like recyclable, compostable, and incinerable materials. Automated sorting facilities enhance precision and reduce labor costs.</p>
+    <div class="guidelines">
+      <p><strong>Guidelines:</strong></p>
+      <ul>
+        <li>Educate households about proper segregation techniques.</li>
+        <li>Use color-coded bins for easier sorting.</li>
+      </ul>
+    </div>
+    <div class="chart-container">
+      <canvas id="segregationChart"></canvas>
+    </div>
+  </section>
+
+  <section>
+    <h2>Disposal Methods</h2>
+    <p>Safe disposal methods include landfill management, incineration, and chemical treatment of hazardous waste. Advanced technologies ensure minimum ecological damage.</p>
+    <div class="guidelines">
+      <p><strong>Guidelines:</strong></p>
+      <ul>
+        <li>Choose disposal methods based on waste type.</li>
+        <li>Adopt recycling as the primary disposal option wherever feasible.</li>
+      </ul>
+    </div>
+    <div class="chart-container">
+      <canvas id="disposalChart"></canvas>
+    </div>
+  </section>
+
+  <section>
+    <h2>Energy Recovery Options</h2>
+    <p>Waste-to-energy plants convert waste into usable forms like electricity or heat, reducing landfill dependency and contributing to the energy grid.</p>
+    <div class="guidelines">
+      <p><strong>Guidelines:</strong></p>
+      <ul>
+        <li>Maximize waste used for energy generation by proper segregation.</li>
+        <li>Encourage community awareness about energy recovery benefits.</li>
+      </ul>
+    </div>
+    <div class="chart-container">
+      <canvas id="energyRecoveryChart"></canvas>
+    </div>
+  </section>
+
+  <section>
+    <h2>Best Routes to Dump Locations</h2>
+    <p>Use the map below to view the best routes to designated dump locations.</p>
+    <div class="map-container">
+      <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3151.8354345099754!2d144.95373631531607!3d-37.8162799797513!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x6ad642af0f1c3b37%3A0x5045675218ce6e1!2sCentral%20Business%20District!5e0!3m2!1sen!2sau!4v1634148021111!5m2!1sen!2sau" allowfullscreen="" loading="lazy"></iframe>
+    </div>
+  </section>
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script>
+    function createChart(ctx, label, data, colors) {
+      const chart = new Chart(ctx, {
+        type: 'pie',
+        data: {
+          labels: label,
+          datasets: [{
+            data: data,
+            backgroundColor: colors,
+            hoverOffset: 4
+          }]
+        },
+        options: {
+          responsive: true,
+          plugins: {
+            legend: {
+              position: 'bottom'
+            }
+          }
+        }
+      });
+
+      // Animate chart data
+      animateChart(chart, data);
+
+      return chart;
+    }
+
+    // Function to animate chart data
+    function animateChart(chart, newData) {
+      const originalData = Array.from(newData);
+      const duration = 1000;
+      const start = null;
+      function step(timestamp) {
+        if (!start) start = timestamp;
+        const progress = timestamp - start;
+        const easing = Math.min(progress / duration, 1);
+        chart.data.datasets[0].data = originalData.map((value, index) => 
+          value + (newData[index] - value) * easing
+        );
+        chart.update();
+        if (progress < duration) {
+          requestAnimationFrame(step);
+        }
+      }
+      requestAnimationFrame(step);
+    }
+
+    // Waste Collection Chart with animation
+    let collectionData = [80, 15, 5];
+    let collectionChart = createChart(
+      document.getElementById('collectionChart').getContext('2d'),
+      ['On-time', 'Delayed', 'Missed'],
+      collectionData,
+      ['#4CAF50', '#FFC107', '#FF5722']
+    );
+
+    // Dumping Processes Chart
+    let dumpingChart = createChart(
+      document.getElementById('dumpingChart').getContext('2d'),
+      ['Compliant', 'Non-Compliant'],
+      [90, 10],
+      ['#4CAF50', '#FF5722']
+    );
+
+    // Segregation Techniques Chart
+    let segregationChart = createChart(
+      document.getElementById('segregationChart').getContext('2d'),
+      ['Recycled', 'Composted', 'Incinerated'],
+      [50, 30, 20],
+      ['#4CAF50', '#FFC107', '#FF5722']
+    );
+
+    // Disposal Methods Chart
+    let disposalChart = createChart(
+      document.getElementById('disposalChart').getContext('2d'),
+      ['Recycled', 'Landfill', 'Incinerated'],
+      [60, 30, 10],
+      ['#4CAF50', '#FFC107', '#FF5722']
+    );
+
+    // Energy Recovery Chart
+    let energyRecoveryChart = createChart(
+      document.getElementById('energyRecoveryChart').getContext('2d'),
+      ['Electricity', 'Heat'],
+      [70, 30],
+      ['#4CAF50', '#FFC107']
+    );
+  </script>
+</body>
+</html>

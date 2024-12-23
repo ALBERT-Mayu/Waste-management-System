@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blog - Smart Waste Management Dashboard</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script> <!-- Ensure this is correct -->
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            background-color: #f0f8ff;
+        }
+
+        header {
+            background-color: #4CAF50;
+            color: white;
+            text-align: center;
+            padding: 1rem 0;
+        }
+
+        nav {
+            margin-top: 10px;
+        }
+
+        nav a {
+            color: white;
+            padding: 10px 15px;
+            text-decoration: none;
+            margin: 0 5px;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+
+        nav a:hover {
+            background-color: #45a049;
+        }
+
+        section {
+            padding: 2rem;
+            margin: 1rem;
+            background-color: white;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        section h2 {
+            margin-top: 0;
+            color: #333;
+        }
+
+        canvas {
+            max-height: 300px;
+            margin-top: 20px;
+        }
+
+        .article {
+            margin-bottom: 20px;
+            padding: 15px;
+            background-color: #f9f9f9;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+        }
+
+        .article h3 {
+            margin: 0 0 10px 0;
+        }
+
+        .article p {
+            margin: 0;
+        }
+
+        .back-button {
+            display: inline-block;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Blog on Sustainable Waste Management</h1>
+        <nav>
+            <a href="index.html">Home</a>
+            <a href="services.html">Our Services</a>
+            <a href="treatment.html">Treatment Process</a>
+            <a href="dashboard.html">Dashboard</a>
+            <a href="feedback.html">Feedback</a>
+        </nav>
+    </header>
+
+    <section>
+        <h2>Blog Topics Overview</h2>
+        <p>This section provides insights into various blog topics related to sustainable waste management practices and innovations. Below is a dynamic chart that showcases the popularity of different topics discussed in our blog.</p>
+        
+        <!-- Dynamic Chart -->
+        <canvas id="blogTopicsChart"></canvas>
+        
+        <h2>Recent Articles</h2>
+        <div class="article">
+            <h3>The Importance of Recycling</h3>
+            <p>Recycling plays a crucial role in reducing waste and conserving resources. In this article, we explore various recycling methods, their benefits, and how you can contribute to a more sustainable future.</p>
+        </div>
+        
+        <button onclick="submitFeedback('Blog Section')">Provide Feedback</button>
+    </section>
+
+    <button class="back-button" onclick="window.history.back()">Back to Previous Page</button>
+
+    <script>
+        // Check if the DOM is fully loaded before executing the script
+        document.addEventListener('DOMContentLoaded', function() {
+            const blogData = {
+                labels: ['Recycling Methods', 'Composting', 'Waste-to-Energy', 'Plastic Pollution', 'Sustainable Practices'],
+                datasets: [{
+                    label: 'Number of Reads',
+                    data: [150, 120, 180, 90, 110], // Ensure this data is correct
+                    backgroundColor: getGradientColor(), // Use the gradient color function
+                    borderColor: 'rgba(0, 0, 0, 1)',
+                    borderWidth: 1,
+                    hoverBackgroundColor: 'rgba(255, 255, 255, 0.7)', // Slightly lighter on hover
+                    hoverBorderColor: 'rgba(0, 0, 0, 1)',
+                }]
+            };
+
+            const ctxBlog = document.getElementById('blogTopicsChart').getContext('2d');
+
+            // Create the chart only if the context is valid
+            if (ctxBlog) {
+                const blogChart = new Chart(ctxBlog, {
+                    type: 'bar',
+                    data: blogData,
+                    options: {
+                        responsive: true,
+                        animation: {
+                            duration: 1000,
+                            easing: 'easeOutBounce' // Bounce effect on load
+                        },
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                title: {
+                                    display: true,
+                                    text: 'Number of Reads'
+                                }
+                            },
+                            x: {
+                                title: {
+                                    display: true,
+                                    text: 'Blog Topics'
+                                }
+                            }
+                        }
+                    }
+                });
+            } else {
+                console.error('Canvas context could not be retrieved.');
+            }
+        });
+
+        function getGradientColor() {
+            const canvas = document.createElement('canvas');
+            const ctx = canvas.getContext('2d');
+            const gradient = ctx.createLinearGradient(0, 0, 0, 400);
+            gradient.addColorStop(0, 'rgba(255, 0, 0, 0.6)');
+            gradient.addColorStop(0.5, 'rgba(0, 255, 0, 0.6)');
+            gradient.addColorStop(1, 'rgba(0, 0, 255, 0.6)');
+            return gradient;
+        }
+
+        function submitFeedback(section) {
+            alert(`Feedback submitted for: ${section}`);
+        }
+    </script>
+</body>
+</html>
